@@ -23,17 +23,19 @@ class MenuManager(val scanner: Scanner) {
     }
 
     fun createArchive() {
-        println("Введите имя архива:")
-        val archiveName = scanner.nextLine().trim()
-        if (archiveName.isEmpty()) {
-            println("Имя архива не может быть пустым.")
-            waitForUser()
-            return
+        while (true) {
+            println("Введите имя архива:")
+            val archiveName = scanner.nextLine().trim()
+            if (archiveName.isEmpty()) {
+                println("Ошибка: имя архива не может быть пустым. Попробуйте снова.")
+            } else {
+                archives.add(archiveName)
+                notes.add(mutableListOf())
+                println("Архив '$archiveName' создан.")
+                waitForUser()
+                break
+            }
         }
-        archives.add(archiveName)
-        notes.add(mutableListOf())
-        println("Архив '$archiveName' создан.")
-        waitForUser()
     }
 
     fun selectArchive() {

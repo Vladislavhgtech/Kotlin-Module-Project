@@ -24,16 +24,27 @@ class NoteMenu(private val menuManager: MenuManager, private val archiveIndex: I
     }
 
     private fun createNote() {
-        println("Введите содержимое заметки:")
-        val noteContent = menuManager.scanner.nextLine().trim()
-        if (noteContent.isEmpty()) {
-            println("Содержание заметки не может быть пустым.")
+        while (true) {
+            println("Введите название заметки:")
+            val noteTitle = menuManager.scanner.nextLine().trim()
+            if (noteTitle.isEmpty()) {
+                println("Ошибка: название заметки не может быть пустым. Попробуйте снова.")
+                continue
+            }
+
+            println("Введите содержимое заметки:")
+            val noteContent = menuManager.scanner.nextLine().trim()
+            if (noteContent.isEmpty()) {
+                println("Ошибка: содержание заметки не может быть пустым. Попробуйте снова.")
+                continue
+            }
+
+            // Создаем заметку с названием и содержимым
+            menuManager.notes[archiveIndex!!].add(Note(noteTitle, noteContent))
+            println("Заметка '$noteTitle' создана.")
             menuManager.waitForUser()
-            return
+            break
         }
-        menuManager.notes[archiveIndex!!].add(Note(noteContent))
-        println("Заметка создана.")
-        menuManager.waitForUser()
     }
 
     private fun listNotes() {
@@ -45,7 +56,7 @@ class NoteMenu(private val menuManager: MenuManager, private val archiveIndex: I
         }
 
         println("Список заметок для архива '${menuManager.archives[archiveIndex!!]}':")
-        noteList.forEachIndexed { index, note -> println("$index. ${note.content}") }
+        noteList.forEachIndexed { index, note -> println("$index. ${note.title}: ${note.content}") }
         println("Введите номер заметки для просмотра или нажмите любую другую клавишу для возврата:")
 
         val choice = menuManager.scanner.nextLine().trim()
@@ -59,7 +70,7 @@ class NoteMenu(private val menuManager: MenuManager, private val archiveIndex: I
 
     private fun viewNote(noteIndex: Int) {
         val note = menuManager.notes[archiveIndex!!][noteIndex]
-        println("Просмотр заметки:\n${note.content}")
+        println("Просмотр заметки:\nНазвание: ${note.title}\nСодержание: ${note.content}")
         menuManager.waitForUser()
     }
 }
